@@ -1,0 +1,25 @@
+Salmonella Findings -- Patrick Huston -- January 2, 2015
+
+Genes found: 
+
+type III secretion system protein SpaS [Salmonella enterica] -->
+	Link: http://www.ncbi.nlm.nih.gov/protein/446019864?report=genbank&log$=prottop&blast_rank=1&RID=D81VB7C501R
+
+	Type three secretion system (often written Type III secretion system and abbreviated TTSS or T3SS, also called Injectisome or Injectosome) is a protein appendage found in several Gram-negative bacteria, like the salmonella enterica bacterium.
+
+	In pathogenic bacteria, the needle-like structure is used as a sensory probe to detect the presence of eukaryotic organisms and secrete proteins that help the bacteria infect them. The secreted effector proteins are secreted directly from the bacterial cell into the eukaryotic (host) cell, where they exert a number of effects that help the pathogen to survive and to escape an immune response.
+
+antigen presentation protein SpaN [Salmonella enterica] -->
+	Link: http://www.ncbi.nlm.nih.gov/protein/446425243?report=genbank&log$=prottop&blast_rank=1&RID=D82056KR014
+
+	Antigen presentation describes a vital process of the immune system. Immune cells cannot "see inside" other cells, which may be infected with viruses or bacteria, and thus rely on information conveyed by fragments of intracellular components being presented on the cell surface on Major histocompatibility complex (MHC) molecules. Likewise, many pathogens are too large to be recognised directly by immune cells, and must first be digested into smaller fragments that can be presented by specialised antigen-presenting cells (APCs).
+
+ATP synthase SpaL [Salmonella enterica] -->
+	Link: http://www.ncbi.nlm.nih.gov/protein/487406678?report=genbank&log$=prottop&blast_rank=2&RID=DCMS6S1Y01R
+
+	ATP synthase is an important enzyme that provides energy for the cell to use through the synthesis of adenosine triphosphate (ATP). ATP is the most commonly used "energy currency" of cells from most organisms. It is formed from adenosine diphosphate (ADP) and inorganic phosphate (Pi), and needs energy. This is how the salmonella bacteria converts ADP and Phosphate into usable energy, ATP. The genome also includes genes for flagellum-specific ATP synthases.
+
+Invasion protein C [Salmonella enterica subsp. enterica serovar Typhimurium] -->
+	Link: http://www.ncbi.nlm.nih.gov/protein/426205819?report=genbank&log$=prottop&blast_rank=28&RID=DCN5M17X01R
+
+	Salmonella invasion protein C (SipC) is a virulence factor that is translocated into host cells by a type III secretion system. In the host cell it binds to actin, stimulates actin polymerisation and counteracts F-actin destabilising proteins. This contributes towards cytoskeletal rearrangements that allow the entry of the pathogen into the host cell.
