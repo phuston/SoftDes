@@ -25,7 +25,9 @@ def get_json(url):
     Given a properly formatted URL for a JSON web API request, return
     a Python JSON object containing the response to that request.
     """
-    pass
+    f = urllib2.urlopen(url)
+    response_text = f.read()
+    return json.loads(response_text)
 
 
 def get_lat_long(place_name):
@@ -36,7 +38,9 @@ def get_lat_long(place_name):
     See https://developers.google.com/maps/documentation/geocoding/
     for Google Maps Geocode API URL formatting requirements.
     """
-    pass
+    url = "https://maps.googleapis.com/maps/api/geocode/json?address=%s" %(place_name.replace(" ","%20"))
+    api_res = get_json(url)
+    return (api_res['results'][0]['geometry']['location']['lat'],api_res['results'][0]['geometry']['location']['lng'])
 
 
 def get_nearest_station(latitude, longitude):
