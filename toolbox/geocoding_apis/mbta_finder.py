@@ -51,7 +51,10 @@ def get_nearest_station(latitude, longitude):
     See http://realtime.mbta.com/Portal/Home/Documents for URL
     formatting requirements for the 'stopsbylocation' API.
     """
-    pass
+    url = "http://realtime.mbta.com/developer/api/v2/stopsbylocation?api_key=wX9NwuHnZU2ToO7GmGR9uw&lat=%s&lon=%s&format=json" % (latitude, longitude)
+    api_res = get_json(url)
+    print api_res
+    return api_res['stop'][0]['stop_name']
 
 
 def find_stop_near(place_name):
@@ -59,5 +62,6 @@ def find_stop_near(place_name):
     Given a place name or address, print the nearest MBTA stop and the 
     distance from the given place to that stop.
     """
-    pass
+    latitude, longitude = get_lat_long(place_name)
+    return get_nearest_station(latitude, longitude)
 
