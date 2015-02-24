@@ -24,17 +24,33 @@ def is_useful_post(post_text):
 	else:
 		return True
 
+def create_post_dictionary(fb):
+	me = fb.profile()
+	friend_dict = {}
 
-my_friends = f.search(me[0], type=FRIENDS, count=10)
-for friend in my_friends:
-    friend_news = f.search(friend.id, type=NEWS, count=100000)
-    for news in friend_news:
-    	dt = datetime.strptime(news.date, "%Y-%m-%dT%H:%M:%S+0000")
-    	if is_useful_post(news.text):
-        	print news.text
+	my_friends = fb.search(me[0], type=FRIENDS, count=5)
+	for friend in my_friends:
+		friend_prof = fb.profile(id=friend.id)
+		friend_dict[friend_prof] = create_user_element(friend, fb)
+	return friend_dict
+
+
+def create_user_element(friend, fb):
+	friend_posts = {}
+	friend_news = fb.search(friend.id, type=NEWS, count=10)
+	for news in friend_news:
+		dt = datetime.strptime(news.date, "%Y-%m-%dT%H:%M:%S+0000")
+		if is_useful_post(news.text):
+			friend_posts[str(news.id)] = sentiment(news.text)
+	return friend_posts
 
 
 
 if __name__ == "__main__":
-	f = Facebook(license='CAAEuAis8fUgBAH31cSTZCiUpBQpuqyqIZC7V2dSNnfjZANXoRv6aVCoUdBO8kcg4Bo5MUAZCZBdfmZCZAW2mB1v3ye5BQbZAXjaxQ94kL1PqaQhZBZBu42aGBoE1Vbvd6qgFe7kpVP2234lazFnuUktsGYcmbfMdj25KsZA4jZAZAHobqpKCZBZCq2EGEjT')
-	me = f.profile()
+	facebook = Facebook(license='CAAEuAis8fUgBAH31cSTZCiUpBQpuqyqIZC7V2dSNnfjZANXoRv6aVCoUdBO8kcg4Bo5MUAZCZBdfmZCZAW2mB1v3ye5BQbZAXjaxQ94kL1PqaQhZBZBu42aGBoE1Vbvd6qgFe7kpVP2234lazFnuUktsGYcmbfMdj25KsZA4jZAZAHobqpKCZBZCq2EGEjT')
+	
+	create_post_dictionary(facebook)
+
+	my_dict = create_post_dictionary(facebook)
+
+	print my_dict
