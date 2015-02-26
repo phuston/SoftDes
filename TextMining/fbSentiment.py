@@ -6,6 +6,8 @@ from datetime import datetime
 import re
 import matplotlib.pyplot as plt
 import numpy as np
+import os
+import MySQLdb
 
 def is_useful_post(post_text):
 	'''Given the input post text, determines
@@ -30,7 +32,7 @@ def is_useful_post(post_text):
 	else:
 		return True
 
-def create_post_dictionary(fb):
+def create_post_date_dictionary(fb, cursor):
 	'''Creates a dictionary of friends --> Includes 
 	profile information, total number of text posts,
 	and average sentiment over all posts 
@@ -38,10 +40,40 @@ def create_post_dictionary(fb):
 	Input: fb - pattern.web facebook session
 	Output: friend post dictionary
 	'''
+
+	me = fb.profile()
+	post_list = []
+
+	my_friends = fb.search(me[0], type=FRIENDS, count=700)
+	for i,friend in enumerate(my_friends):
+		os.system('clear')
+		print str((i/float(len(my_friends)))*100) + ' percent complete.'
+		friend_news = fb.search(friend.id, type=NEWS, count=1000)
+		for news in friend_news:
+			if is_useful_post(news.text):
+				# print news.text
+				# print sentiment(news.text)
+				news_date = datetime.strptime(news.date, "%Y-%m-%dT%H:%M:%S+0000").timetuple().tm_yday
+				post_sent = sentiment(news.text)[0]
+
+				cursor.execute('INSERT INTO fb_posts(day_yr, sentiment) VALUES(%d, %f)' %(news_date, post_sent))
+	return True
+
+
+
+def create_friend_post_dictionary(fb):
+	'''Creates a dictionary of friends --> Includes 
+	profile information, total number of text posts,
+	and average sentiment over all posts 
+
+	Input: fb - pattern.web facebook session
+	Output: friend post dictionary
+	'''
+
 	me = fb.profile()
 	friend_dict = {}
 
-	my_friends = fb.search(me[0], type=FRIENDS, count=300)
+	my_friends = fb.search(me[0], type=FRIENDS, count=700)
 	for friend in my_friends:
 		friend_prof = fb.profile(id=friend.id)
 		print friend_prof
@@ -57,8 +89,7 @@ def create_user_element(friend, fb):
 
 	Inputs: pattern.web friend object, pattern.web fb session
 	Output: tuple of friend information to be added to
-	dictionary created by 'create_post_dictionary' '''
-
+	dictionary created by 'create_friend_post_dictionary' '''
 
 	tot_post = 0.0
 	sent = 0.0
@@ -78,28 +109,60 @@ def create_user_element(friend, fb):
 
 
 
-if __name__ == "__main__":
-	facebook = Facebook(license='CAAEuAis8fUgBAH31cSTZCiUpBQpuqyqIZC7V2dSNnfjZANXoRv6aVCoUdBO8kcg4Bo5MUAZCZBdfmZCZAW2mB1v3ye5BQbZAXjaxQ94kL1PqaQhZBZBu42aGBoE1Vbvd6qgFe7kpVP2234lazFnuUktsGYcmbfMdj25KsZA4jZAZAHobqpKCZBZCq2EGEjT', throttle = 0.5)
-	
-	create_post_dictionary(facebook)
-	my_dict = create_post_dictionary(facebook)
+if __name__ == "__main__":	
+	# Connects to MySQL database locally
+	print 'Accessing MySQL database...'
+	db = MySQLdb.connect(host="localhost", user="phuston", passwd="1nval1dpass", db="fbsentiment")
+	cursor = db.cursor()
 
-	male_sent = []
-	fem_sent = []
+	#Selects all rows from database table
+	cursor.execute("SELECT * FROM fb_posts")
 
-	male_sub = []
-	fem_sub = []
+	# Gets the number of rows in the resultset
+	numrows = int(cursor.rowcount)
 
-	for friend, friend_info in my_dict.iteritems():
-		if str(friend[3])=='m':
-			male_sent.append(my_dict[friend][1])
-			male_sub.append(my_dict[friend][2])
-		elif str(friend[3])=='f':
-			fem_sent.append(my_dict[friend][1])
-			fem_sub.append(my_dict[friend][2])
+	if numrows == 0:
+		facebook = Facebook(license='CAAEuAis8fUgBAH31cSTZCiUpBQpuqyqIZC7V2dSNnfjZANXoRv6aVCoUdBO8kcg4Bo5MUAZCZBdfmZCZAW2mB1v3ye5BQbZAXjaxQ94kL1PqaQhZBZBu42aGBoE1Vbvd6qgFe7kpVP2234lazFnuUktsGYcmbfMdj25KsZA4jZAZAHobqpKCZBZCq2EGEjT', throttle = 0.5)
+		create_post_date_dictionary(facebook, cursor)
+
+	day_dict = {}
+	# Gets and display one row at a time
+	for x in range(0,numrows):
+		row = cursor.fetchone()
+		day = str(row[0])
+		sent = row[1]
+		day_dict[day] = day_dict.get(day, []) + [sent]
+
+	print day_dict
+
+	db.commit()
+	# disconnect from server
+	db.close()
+
+	# post_dict = create_post_date_dictionary(facebook)
+
+	# for post_el in post_dict:
+	# 	print str(post[0]) + str(post[1])
 
 
-	print "Average male sentimentality: " + str(np.mean(male_sent))
-	print "Average female sentimentality: " + str(np.mean(fem_sent))
-	print "Average male subjectivity: " + str(np.mean(male_sub))
-	print "Average female subjectivity: " + str(np.mean(fem_sub))
+	# my_dict = create_friend_post_dictionary(facebook)
+
+	# male_sent = []
+	# fem_sent = []
+
+	# male_sub = []
+	# fem_sub = []
+
+	# for friend, friend_info in my_dict.iteritems():
+	# 	if str(friend[3])=='m':
+	# 		male_sent.append(my_dict[friend][1])
+	# 		male_sub.append(my_dict[friend][2])
+	# 	elif str(friend[3])=='f':
+	# 		fem_sent.append(my_dict[friend][1])
+	# 		fem_sub.append(my_dict[friend][2])
+
+
+	# print "Average male sentimentality: " + str(np.mean(male_sent))
+	# print "Average female sentimentality: " + str(np.mean(fem_sent))
+	# print "Average male subjectivity: " + str(np.mean(male_sub))
+	# print "Average female subjectivity: " + str(np.mean(fem_sub))
