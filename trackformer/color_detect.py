@@ -8,18 +8,13 @@ cam = cv2.VideoCapture(0)
 winName = "Color Detector"
 cv2.namedWindow(winName, cv2.CV_WINDOW_AUTOSIZE)
 
-boundaries = [
-    ([17, 17, 100], [50, 56, 200]),
-    ([86, 31, 4], [220, 88, 50]),
-    ([25, 146, 190], [62, 174, 250]),
-    ([103, 86, 65], [145, 133, 128])
-]
+boundaries = ([50, 30, 30], [145, 133, 128])
 
     
 while True:
 	ret, frame = cam.read()
 
-	lower, upper = boundaries[1]
+	lower, upper = boundaries[2]
 	# lower, upper = random.choice(boundaries)
 	# create NumPy arrays from the boundaries
 	lower = np.array(lower, dtype = "uint8")
