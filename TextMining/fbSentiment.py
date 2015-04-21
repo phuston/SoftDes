@@ -1,4 +1,4 @@
-# fb_license = CAAEuAis8fUgBAH31cSTZCiUpBQpuqyqIZC7V2dSNnfjZANXoRv6aVCoUdBO8kcg4Bo5MUAZCZBdfmZCZAW2mB1v3ye5BQbZAXjaxQ94kL1PqaQhZBZBu42aGBoE1Vbvd6qgFe7kpVP2234lazFnuUktsGYcmbfMdj25KsZA4jZAZAHobqpKCZBZCq2EGEjT
+fb_license = None
 
 from pattern.web import *
 from pattern.en import *
@@ -130,7 +130,7 @@ def create_user_element(friend, fb):
 if __name__ == "__main__":	
 	# Connects to MySQL database locally
 	print 'Accessing MySQL database...'
-	db = MySQLdb.connect(host="localhost", user="phuston", passwd="1nval1dpass", db="fbsentiment")
+	db = MySQLdb.connect(host="localhost", user="username", passwd="password", db="fbsentiment")
 	cursor = db.cursor()
 
 	#Selects all rows from database table
